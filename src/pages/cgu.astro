@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CguStandalone from "../components/CguStandalone";
+
+const title = "Conditions générales d'utilisation | Provectio";
+const description =
+  "CGU de la plateforme d'auto-diagnostic SaaS & IA Provectio : accès, données personnelles, propriété intellectuelle et responsabilité.";
+---
+
+<Layout title={title} description={description}>
+  <CguStandalone client:load />
+</Layout>

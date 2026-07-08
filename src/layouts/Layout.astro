@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const SITE_URL = "https://diag-saasia.provectio.fr";
+
+const {
+  title = "Votre SI est-il prêt pour le SaaS et l'IA ? | Provectio",
+  description =
+    "Auto-diagnostic en 3 minutes : évaluez votre maturité SaaS et IA. 16 questions, 2 scores, radar 6 axes et recommandations personnalisées.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="SaaS, IA, Copilot, M365, auto-diagnostic, maturité SI, Provectio"
+    />
+    <link rel="icon" type="image/png" href="/images/favicon-provectio.png?v=3" />
+    <link rel="shortcut icon" href="/images/favicon-provectio.png?v=3" />
+    <link rel="apple-touch-icon" href="/images/favicon-provectio.png?v=3" />
+    <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+    <link rel="canonical" href={SITE_URL} />
+    <meta property="og:url" content={SITE_URL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

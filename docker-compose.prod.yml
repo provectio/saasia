@@ -1,0 +1,29 @@
+# Production : images GHCR (web + API back-office)
+# Usage : docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d
+
+services:
+  api:
+    image: ghcr.io/provectio/saasia-api:latest
+    container_name: saasia-api
+    restart: unless-stopped
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET:?Définir SESSION_SECRET dans .env}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:?Définir ADMIN_USERNAME dans .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Définir ADMIN_PASSWORD dans .env}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://diag-saasia.provectio.fr}
+      DATABASE_PATH: /data/leads.db
+      NODE_ENV: production
+    volumes:
+      - api-data:/data
+
+  web:
+    image: ghcr.io/provectio/saasia:latest
+    container_name: saasia
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "${HTTP_PORT:-8086}:80"
+
+volumes:
+  api-data:
