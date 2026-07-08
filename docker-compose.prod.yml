@@ -10,7 +10,7 @@ services:
       SESSION_SECRET: ${SESSION_SECRET:?Définir SESSION_SECRET dans .env}
       ADMIN_USERNAME: ${ADMIN_USERNAME:?Définir ADMIN_USERNAME dans .env}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Définir ADMIN_PASSWORD dans .env}
-      CORS_ORIGINS: ${CORS_ORIGINS:-https://diag-saasia.provectio.fr}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://saas-readiness.provectio.fr}
       DATABASE_PATH: /data/leads.db
       NODE_ENV: production
     volumes:

@@ -1,5 +1,5 @@
 /** URL publique du diagnostic SaaS / IA */
-export const DIAG_SITE_URL = "https://diag-saasia.provectio.fr";
+export const DIAG_SITE_URL = "https://saas-readiness.provectio.fr";
 
 export const CGU_PATH = "/cgu";
 

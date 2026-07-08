@@ -1,0 +1,38 @@
+# Exemple de vhost pour plane-manager-nginx (ports 80/443 sur la VM).
+# Copier dans le dossier de conf du reverse proxy, puis recharger nginx.
+#
+# Le conteneur saasia écoute en local sur 8086 (voir HTTP_PORT dans .env).
+# diaginfogerance utilise déjà 8085.
+
+server {
+    listen 80;
+    server_name saas-readiness.provectio.fr;
+
+    location / {
+        proxy_pass http://127.0.0.1:8086;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Décommenter et adapter pour TLS (certbot / certificat existant) :
+#
+# server {
+#     listen 443 ssl http2;
+#     server_name saas-readiness.provectio.fr;
+#
+#     ssl_certificate     /etc/letsencrypt/live/saas-readiness.provectio.fr/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/saas-readiness.provectio.fr/privkey.pem;
+#
+#     location / {
+#         proxy_pass http://127.0.0.1:8086;
+#         proxy_http_version 1.1;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#     }
+# }

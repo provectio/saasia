@@ -2,6 +2,12 @@
 
 Single-page application pour l'auto-diagnostic « Votre SI est-il prêt pour le SaaS et l'IA ? ».
 
+**Production :** [https://saas-readiness.provectio.fr/](https://saas-readiness.provectio.fr/)
+
+**Back-office :** [https://saas-readiness.provectio.fr/management](https://saas-readiness.provectio.fr/management)
+
+Repo : [github.com/provectio/saasia](https://github.com/provectio/saasia)
+
 ## Fonctionnalités
 
 - Questionnaire 16 questions en 6 blocs (wizard)
@@ -78,8 +84,21 @@ docker compose -f docker-compose.prod.yml up -d
 | `SESSION_SECRET` | Secret session (min. 32 car.) — `openssl rand -hex 32` |
 | `ADMIN_USERNAME` | Identifiant admin (créé au 1er démarrage si base vide) |
 | `ADMIN_PASSWORD` | Mot de passe initial (fort) |
-| `CORS_ORIGINS` | Origine du site public (ex. `https://diag-saasia.provectio.fr`) |
-| `HTTP_PORT` | Port exposé (défaut `8086`) |
+| `CORS_ORIGINS` | Origine du site public (`https://saas-readiness.provectio.fr`) |
+| `HTTP_PORT` | Port exposé sur la VM (défaut `8086` — `8085` est utilisé par diaginfogerance) |
+
+### Reverse proxy (nginx sur la VM)
+
+Le conteneur écoute en local sur `8086`. Le domaine public passe par `plane-manager-nginx` (80/443).
+
+Exemple de vhost : [`deploy/nginx-saas-readiness.conf.example`](deploy/nginx-saas-readiness.conf.example)
+
+```bash
+# Sur la VM, après docker compose up :
+# 1. Ajouter le vhost nginx → proxy_pass http://127.0.0.1:8086
+# 2. DNS : saas-readiness.provectio.fr → IP de la VM
+# 3. Certificat TLS (si pas déjà géré par un wildcard *.provectio.fr)
+```
 
 **Première connexion :** ouvrir `/management`, se connecter, scanner le QR code 2FA, valider avec un code à 6 chiffres.
 
