@@ -87,18 +87,23 @@ docker compose -f docker-compose.prod.yml up -d
 | `CORS_ORIGINS` | Origine du site public (`https://saas-readiness.provectio.fr`) |
 | `HTTP_PORT` | Port exposé sur la VM (défaut `8086` — `8085` est utilisé par diaginfogerance) |
 
-### Reverse proxy (nginx sur la VM)
+### Reverse proxy
 
-Le conteneur écoute en local sur `8086`. Le domaine public passe par `plane-manager-nginx` (80/443).
+#### Traefik (recommandé sur votre VM)
 
-Exemple de vhost : [`deploy/nginx-saas-readiness.conf.example`](deploy/nginx-saas-readiness.conf.example)
+Le conteneur `saasia` sert du **HTTP** sur le port 80. Traefik termine le TLS (Let's Encrypt).
 
 ```bash
-# Sur la VM, après docker compose up :
-# 1. Ajouter le vhost nginx → proxy_pass http://127.0.0.1:8086
-# 2. DNS : saas-readiness.provectio.fr → IP de la VM
-# 3. Certificat TLS (si pas déjà géré par un wildcard *.provectio.fr)
+# Adapter TRAEFIK_NETWORK et TRAEFIK_CERT_RESOLVER dans .env
+# (mêmes valeurs que diag-infogerance.provectio.fr)
+docker compose -f docker-compose.prod.yml -f docker-compose.traefik.yml up -d
 ```
+
+Dépannage certificat : [`deploy/TRAEFIK.md`](deploy/TRAEFIK.md)
+
+#### Nginx manuel (sans Traefik)
+
+Exemple : [`deploy/nginx-saas-readiness.conf.example`](deploy/nginx-saas-readiness.conf.example)
 
 **Première connexion :** ouvrir `/management`, se connecter, scanner le QR code 2FA, valider avec un code à 6 chiffres.
 

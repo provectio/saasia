@@ -1,0 +1,34 @@
+# Surcharge Docker Compose pour Traefik (TLS terminé par Traefik, pas par le conteneur).
+#
+# Usage sur la VM :
+#   docker compose -f docker-compose.prod.yml -f docker-compose.traefik.yml up -d
+#
+# Avant de lancer :
+#   1. Adapter TRAEFIK_NETWORK + TRAEFIK_CERT_RESOLVER dans .env
+#      (mêmes valeurs que diag-infogerance.provectio.fr).
+#   2. Le port 8086 reste exposé pour debug ; Traefik route via le réseau Docker.
+
+services:
+  web:
+    networks:
+      - default
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_NETWORK:-traefik}
+      - traefik.http.routers.saasia.rule=Host(`saas-readiness.provectio.fr`)
+      - traefik.http.routers.saasia.entrypoints=websecure
+      - traefik.http.routers.saasia.tls=true
+      - traefik.http.routers.saasia.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-letsencrypt}
+      - traefik.http.routers.saasia.service=saasia
+      - traefik.http.services.saasia.loadbalancer.server.port=80
+      - traefik.http.routers.saasia-http.rule=Host(`saas-readiness.provectio.fr`)
+      - traefik.http.routers.saasia-http.entrypoints=web
+      - traefik.http.routers.saasia-http.middlewares=saasia-redirect-https
+      - traefik.http.middlewares.saasia-redirect-https.redirectscheme.scheme=https
+      - traefik.http.middlewares.saasia-redirect-https.redirectscheme.permanent=true
+
+networks:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-traefik}
