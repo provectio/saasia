@@ -34,17 +34,328 @@ body {
 }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: white !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body * {
+    box-shadow: none !important;
+  }
+
+  .min-h-screen {
+    min-height: auto !important;
+    background: white !important;
+  }
+
   header,
   footer,
   #cta,
   #social,
-  .no-print {
+  .no-print,
+  .screen-only {
     display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
   }
 
   #results {
     padding-top: 0 !important;
   }
+
+  .pdf-report {
+    color: #101828;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .pdf-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 255mm;
+    page-break-after: always;
+    break-after: page;
+    box-sizing: border-box;
+  }
+
+  .pdf-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  /* Page de garde — style Octopus / Provectio */
+  .pdf-cover {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .pdf-cover-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 90% 80% at 100% 0%, #9747fc55 0%, transparent 55%),
+      radial-gradient(ellipse 70% 60% at 100% 40%, #5d85fd33 0%, transparent 50%),
+      linear-gradient(135deg, #f8f5ff 0%, #ffffff 45%, #f3f6ff 100%);
+  }
+
+  .pdf-cover-bg::after {
+    content: "";
+    position: absolute;
+    top: -40mm;
+    right: -30mm;
+    width: 140mm;
+    height: 200mm;
+    border-radius: 40% 0 0 60%;
+    background: linear-gradient(160deg, #9747fc22, #5d85fd18);
+    transform: rotate(-8deg);
+  }
+
+  .pdf-cover-logo {
+    position: absolute;
+    top: 14mm;
+    left: 14mm;
+    width: 52mm;
+    height: auto;
+  }
+
+  .pdf-cover-main {
+    position: absolute;
+    right: 14mm;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 95mm;
+    text-align: right;
+  }
+
+  .pdf-cover-company {
+    margin: 0 0 4mm;
+    font-size: 20pt;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #101828;
+  }
+
+  .pdf-cover-title {
+    margin: 0 0 3mm;
+    font-size: 14pt;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #9747fc;
+    text-transform: uppercase;
+  }
+
+  .pdf-cover-subtitle {
+    margin: 0 0 6mm;
+    font-size: 11pt;
+    color: #475467;
+    line-height: 1.4;
+  }
+
+  .pdf-cover-meta,
+  .pdf-cover-date {
+    margin: 0;
+    font-size: 9pt;
+    color: #667085;
+  }
+
+  .pdf-cover-date {
+    margin-top: 2mm;
+  }
+
+  .pdf-cover-footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 0;
+    right: 0;
+    padding: 0 14mm;
+    text-align: center;
+    font-size: 7pt;
+    line-height: 1.45;
+    color: #757575;
+  }
+
+  .pdf-cover-footer p {
+    margin: 0 0 1.5mm;
+  }
+
+  /* Pages intérieures */
+  .pdf-page-header {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    margin-bottom: 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 1px solid #e4e7ec;
+  }
+
+  .pdf-header-logo {
+    width: 28mm;
+    height: auto;
+  }
+
+  .pdf-header-kicker {
+    margin: 0;
+    font-size: 8pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9747fc;
+  }
+
+  .pdf-header-title {
+    margin: 1mm 0 0;
+    font-size: 14pt;
+    font-weight: 800;
+    color: #101828;
+  }
+
+  .pdf-synthesis-lead {
+    margin: 0 0 5mm;
+    font-size: 10pt;
+    line-height: 1.45;
+    color: #475467;
+  }
+
+  .pdf-gauges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+    margin-bottom: 5mm;
+  }
+
+  .pdf-radar-block {
+    flex: 1;
+  }
+
+  .pdf-section-title {
+    margin: 0 0 3mm;
+    font-size: 11pt;
+    font-weight: 700;
+    color: #101828;
+  }
+
+  .pdf-axis-table {
+    width: 100%;
+    margin-top: 3mm;
+    border-collapse: collapse;
+    font-size: 8pt;
+  }
+
+  .pdf-axis-table th,
+  .pdf-axis-table td {
+    border: 1px solid #e4e7ec;
+    padding: 2mm 2.5mm;
+    text-align: left;
+  }
+
+  .pdf-axis-table th {
+    background: #f9f5ff;
+    font-weight: 700;
+    color: #6941c6;
+  }
+
+  .pdf-axis-table td:nth-child(2) {
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  .pdf-axis-table td:nth-child(3) {
+    color: #7c3aed;
+    font-weight: 600;
+  }
+
+  .pdf-report-summary {
+    margin: 0 0 5mm;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #344054;
+  }
+
+  .pdf-priorities {
+    margin: 0 0 5mm;
+    padding-left: 5mm;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: #344054;
+  }
+
+  .pdf-priorities li {
+    margin-bottom: 2mm;
+  }
+
+  .pdf-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 3mm;
+    margin-bottom: 5mm;
+  }
+
+  .pdf-section-block h4 {
+    margin: 0 0 1mm;
+    font-size: 10pt;
+    font-weight: 700;
+    color: #9747fc;
+  }
+
+  .pdf-section-block p {
+    margin: 0;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: #475467;
+  }
+
+  .pdf-cta-box {
+    margin-top: auto;
+    padding: 4mm;
+    border-radius: 3mm;
+    border: 1px solid #d6bbfb;
+    background: linear-gradient(135deg, #f9f5ff, #eff4ff);
+  }
+
+  .pdf-cta-label {
+    margin: 0 0 1mm;
+    font-size: 8pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6941c6;
+  }
+
+  .pdf-cta-offer {
+    margin: 0 0 1mm;
+    font-size: 11pt;
+    font-weight: 800;
+    color: #101828;
+  }
+
+  .pdf-cta-detail {
+    margin: 0;
+    font-size: 9pt;
+    color: #475467;
+  }
+
+  .pdf-page-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 3mm;
+    border-top: 1px solid #e4e7ec;
+    font-size: 7.5pt;
+    color: #98a2b3;
+  }
+}
+
+.print-only {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

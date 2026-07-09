@@ -12,14 +12,16 @@ const RADAR_LABELS: Record<BlockId, string> = {
 
 interface DualRadarChartProps {
   axes: AxisScore[];
+  variant?: "screen" | "print";
 }
 
-export function DualRadarChart({ axes }: DualRadarChartProps) {
-  const padding = 64;
-  const size = 300;
+export function DualRadarChart({ axes, variant = "screen" }: DualRadarChartProps) {
+  const isPrint = variant === "print";
+  const padding = isPrint ? 40 : 64;
+  const size = isPrint ? 200 : 300;
   const center = padding + size / 2;
-  const radius = 96;
-  const labelRadius = radius + 42;
+  const radius = isPrint ? 64 : 96;
+  const labelRadius = radius + (isPrint ? 28 : 42);
   const levels = 4;
   const viewSize = size + padding * 2;
   const angleStep = (2 * Math.PI) / axes.length;
@@ -55,7 +57,7 @@ export function DualRadarChart({ axes }: DualRadarChartProps) {
     <div className="w-full">
       <svg
         viewBox={`0 0 ${viewSize} ${viewSize}`}
-        className="mx-auto w-full max-w-[400px]"
+        className={isPrint ? "mx-auto w-full max-w-[280px]" : "mx-auto w-full max-w-[400px]"}
         role="img"
         aria-label="Radar des 6 axes — SaaS et IA"
         overflow="visible"
@@ -112,7 +114,7 @@ export function DualRadarChart({ axes }: DualRadarChartProps) {
               y={p.y}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="fill-gray-700 text-[10px] font-medium"
+              className={isPrint ? "fill-gray-700 text-[8px] font-medium" : "fill-gray-700 text-[10px] font-medium"}
             >
               {shortLabel}
             </text>
@@ -120,7 +122,7 @@ export function DualRadarChart({ axes }: DualRadarChartProps) {
         })}
       </svg>
 
-      <div className="mt-4 flex justify-center gap-6 text-sm">
+      <div className={`flex justify-center gap-6 ${isPrint ? "mt-2 text-xs" : "mt-4 text-sm"}`}>
         <span className="inline-flex items-center gap-2">
           <span className="size-3 rounded-full bg-[#2563eb]" />
           SaaS Readiness

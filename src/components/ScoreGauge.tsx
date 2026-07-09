@@ -4,6 +4,7 @@ interface ScoreGaugeProps {
   profileLabel: string;
   color: string;
   accentColor: string;
+  variant?: "screen" | "print";
 }
 
 export function ScoreGauge({
@@ -12,19 +13,33 @@ export function ScoreGauge({
   profileLabel,
   color,
   accentColor,
+  variant = "screen",
 }: ScoreGaugeProps) {
-  const radius = 72;
-  const stroke = 12;
+  const isPrint = variant === "print";
+  const radius = isPrint ? 52 : 72;
+  const stroke = isPrint ? 9 : 12;
   const normalizedRadius = radius - stroke / 2;
   const circumference = normalizedRadius * 2 * Math.PI;
   const offset = circumference - (percent / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center rounded-3xl border border-primary/15 bg-white p-6 shadow-lg">
-      <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+    <div
+      className={
+        isPrint
+          ? "flex flex-col items-center rounded-2xl border border-gray-200 bg-white p-4"
+          : "flex flex-col items-center rounded-3xl border border-primary/15 bg-white p-6 shadow-lg"
+      }
+    >
+      <p
+        className={
+          isPrint
+            ? "text-xs font-semibold uppercase tracking-wide text-gray-500"
+            : "text-sm font-semibold uppercase tracking-wide text-gray-500"
+        }
+      >
         {label}
       </p>
-      <div className="relative mt-4">
+      <div className={`relative ${isPrint ? "mt-2" : "mt-4"}`}>
         <svg width={radius * 2} height={radius * 2} className="-rotate-90">
           <circle
             cx={radius}
@@ -49,11 +64,13 @@ export function ScoreGauge({
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold text-gray-900">{percent}</span>
+          <span className={isPrint ? "text-2xl font-bold text-gray-900" : "text-3xl font-bold text-gray-900"}>
+            {percent}
+          </span>
           <span className="text-xs text-gray-500">/ 100</span>
         </div>
       </div>
-      <p className="mt-4 text-lg font-bold" style={{ color }}>
+      <p className={`${isPrint ? "mt-2 text-sm" : "mt-4 text-lg"} font-bold`} style={{ color }}>
         {profileLabel}
       </p>
     </div>

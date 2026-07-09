@@ -13,6 +13,7 @@ import {
 import { DualRadarChart } from "@/components/DualRadarChart";
 import { ProvectioHeader } from "@/components/ProvectioHeader";
 import { TrustSection } from "@/components/TrustSection";
+import { PdfReport } from "@/components/PdfReport";
 import { ProfileCtaBanner } from "@/components/ProfileCtaBanner";
 import { ScoreGauge } from "@/components/ScoreGauge";
 import { formatPhoneFr } from "@/lib/phone";
@@ -206,7 +207,11 @@ export default function SaasiaApp() {
 
   const handleDownloadPdf = () => {
     trackEvent("pdf_download");
+    const previousTitle = document.title;
+    const company = form.company.trim() || "Provectio";
+    document.title = `Diagnostic SaaS IA - ${company}`;
     window.print();
+    document.title = previousTitle;
   };
 
   return (
@@ -514,7 +519,7 @@ export default function SaasiaApp() {
       )}
 
       {step === "results" && scores && (
-        <section id="results" className="px-6 py-16 pt-8">
+        <section id="results" className="screen-only px-6 py-16 pt-8">
           <div className="mx-auto max-w-5xl">
             {saveStatus === "saving" && (
               <p className="no-print mb-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-gray-700">
@@ -603,15 +608,21 @@ export default function SaasiaApp() {
                 Télécharger mon diagnostic
               </button>
               <p className="mt-2 text-xs text-gray-400">
-                Utilisez « Enregistrer au format PDF » dans la fenêtre d&apos;impression.
+                Rapport 3 pages : page de garde, synthèse et rapport personnalisé.
               </p>
             </div>
           </div>
         </section>
       )}
 
+      {step === "results" && scores && aiReport && (
+        <div className="print-only">
+          <PdfReport scores={scores} aiReport={aiReport} form={form} />
+        </div>
+      )}
+
       {step === "results" && scores && (
-        <section className="px-6 py-12">
+        <section className="screen-only px-6 py-12">
           <ProfileCtaBanner
             cta={scores.cta}
             onClick={() => trackEvent("cta_clicked", { profile: scores.cta.id })}
@@ -619,7 +630,7 @@ export default function SaasiaApp() {
         </section>
       )}
 
-      {step === "results" && <TrustSection />}
+      {step === "results" && <div className="screen-only"><TrustSection /></div>}
 
       <footer className="border-t border-gray-200 bg-gray-50 px-6 py-10">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">

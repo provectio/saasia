@@ -1,0 +1,39 @@
+# Exemple Traefik — file provider (votre cas : @file)
+#
+# Le dashboard affiche : saas-readiness.provectio.fr@file → service provectio-saasia
+# Copier/adapter dans le même dossier que diag-infogerance.provectio.fr
+# (souvent /opt/traefik/dynamic/ ou équivalent sur la VM).
+#
+# Point critique pour le certificat : tls.certResolver doit être renseigné
+# (même nom que diag-infogerance.provectio.fr). Sans cela → certificat par défaut Traefik.
+
+http:
+  routers:
+    saas-readiness.provectio.fr:
+      rule: Host(`saas-readiness.provectio.fr`)
+      entryPoints:
+        - websecure
+      service: provectio-saasia
+      tls:
+        certResolver: letsencrypt   # ← ADAPTER : reprendre la valeur de diag-infogerance
+
+    saas-readiness.provectio.fr-http:
+      rule: Host(`saas-readiness.provectio.fr`)
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-https
+      service: provectio-saasia
+
+  middlewares:
+    redirect-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    provectio-saasia:
+      loadBalancer:
+        servers:
+          # Backend HTTP du conteneur saasia (port hôte docker-compose)
+          - url: http://127.0.0.1:8086

@@ -1,0 +1,38 @@
+# Exemple Traefik — file provider (votre cas : `saas-readiness.provectio.fr@file`)
+#
+# Le routeur apparaît dans le dashboard Traefik avec Provider = file.
+# Copier / fusionner dans le fichier dynamique Traefik de la VM
+# (même emplacement que diag-infogerance.provectio.fr).
+#
+# Puis : recharger Traefik ou attendre le watch du file provider.
+
+http:
+  routers:
+    saas-readiness.provectio.fr:
+      rule: Host(`saas-readiness.provectio.fr`)
+      entryPoints:
+        - websecure
+      service: provectio-saasia
+      tls:
+        certResolver: letsencrypt   # ⚠️ OBLIGATOIRE — reprendre le nom exact de diag-infogerance
+
+    saas-readiness.provectio.fr-http:
+      rule: Host(`saas-readiness.provectio.fr`)
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-https
+      service: provectio-saasia
+
+  middlewares:
+    redirect-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    provectio-saasia:
+      loadBalancer:
+        servers:
+          # Backend HTTP du conteneur saasia (pas de TLS ici)
+          - url: http://127.0.0.1:8086
