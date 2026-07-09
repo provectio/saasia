@@ -215,7 +215,8 @@ export default function SaasiaApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#9747FC]/20 via-[#5D85FD]/15 to-white">
+    <>
+      <div className="min-h-screen bg-gradient-to-b from-[#9747FC]/20 via-[#5D85FD]/15 to-white print:hidden">
       <ProvectioHeader />
 
       {step === "hero" && (
@@ -519,7 +520,7 @@ export default function SaasiaApp() {
       )}
 
       {step === "results" && scores && (
-        <section id="results" className="screen-only px-6 py-16 pt-8">
+        <section id="results" className="px-6 py-16 pt-8">
           <div className="mx-auto max-w-5xl">
             {saveStatus === "saving" && (
               <p className="no-print mb-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-gray-700">
@@ -615,14 +616,8 @@ export default function SaasiaApp() {
         </section>
       )}
 
-      {step === "results" && scores && aiReport && (
-        <div className="print-only">
-          <PdfReport scores={scores} aiReport={aiReport} form={form} />
-        </div>
-      )}
-
       {step === "results" && scores && (
-        <section className="screen-only px-6 py-12">
+        <section className="px-6 py-12">
           <ProfileCtaBanner
             cta={scores.cta}
             onClick={() => trackEvent("cta_clicked", { profile: scores.cta.id })}
@@ -630,7 +625,7 @@ export default function SaasiaApp() {
         </section>
       )}
 
-      {step === "results" && <div className="screen-only"><TrustSection /></div>}
+      {step === "results" && <TrustSection />}
 
       <footer className="border-t border-gray-200 bg-gray-50 px-6 py-10">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
@@ -662,12 +657,19 @@ export default function SaasiaApp() {
               Conditions générales d&apos;utilisation
             </button>
             {" · "}
-            1.0.0 — Tous droits réservés Provectio — 2026
+            1.0.1 — Tous droits réservés Provectio — 2026
           </p>
         </div>
       </footer>
 
       <CguModal open={cguModalOpen} onClose={() => setCguModalOpen(false)} />
-    </div>
+      </div>
+
+      {step === "results" && scores && aiReport && (
+        <div className="pdf-print-only">
+          <PdfReport scores={scores} aiReport={aiReport} form={form} />
+        </div>
+      )}
+    </>
   );
 }

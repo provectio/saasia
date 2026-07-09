@@ -59,17 +59,14 @@ body {
   footer,
   #cta,
   #social,
-  .no-print,
-  .screen-only {
+  #results,
+  .no-print {
     display: none !important;
   }
 
-  .print-only {
+  /* Contenu PDF hors du wrapper écran */
+  .pdf-print-only {
     display: block !important;
-  }
-
-  #results {
-    padding-top: 0 !important;
   }
 
   .pdf-report {
@@ -354,7 +351,8 @@ body {
   }
 }
 
-.print-only {
+/* PdfReport : invisible à l'écran, visible uniquement à l'impression */
+.pdf-print-only {
   display: none;
 }
 

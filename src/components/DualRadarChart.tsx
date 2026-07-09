@@ -58,6 +58,7 @@ export function DualRadarChart({ axes, variant = "screen" }: DualRadarChartProps
       <svg
         viewBox={`0 0 ${viewSize} ${viewSize}`}
         className={isPrint ? "mx-auto w-full max-w-[280px]" : "mx-auto w-full max-w-[400px]"}
+        style={{ printColorAdjust: "exact", WebkitPrintColorAdjust: "exact" }}
         role="img"
         aria-label="Radar des 6 axes — SaaS et IA"
         overflow="visible"
